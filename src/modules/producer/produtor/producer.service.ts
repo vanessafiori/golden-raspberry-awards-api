@@ -12,18 +12,23 @@ export class ProducerService {
   ){ }
 
   async getAwardIntervalsByProducer() {
+    let min: WinningProducerIntervalDTO[] = [];
+    let max: WinningProducerIntervalDTO[] = [];
+
     const movies = await this.movieService.getWinningMovies();
-
+    if(movies.length === 0){ return { min, max} }
+    
     const producers = this.getListProducers(movies);
-
+    
     const winningProducers = this.getWinningProducers(producers);
+    if(winningProducers.length === 0){ return { min, max} }
 
     const producerWinIntervals = this.getProducersWinIntervals(winningProducers);
 
     const interval: { minInterval: number; maxInterval: number } = this.getMinMaxInterval(producerWinIntervals);
 
-    const min = producerWinIntervals.filter(p => p.interval === interval.minInterval);
-    const max = producerWinIntervals.filter(p => p.interval === interval.maxInterval);
+    min = producerWinIntervals.filter(p => p.interval === interval.minInterval);
+    max = producerWinIntervals.filter(p => p.interval === interval.maxInterval);
 
     return { min, max } ;
   }
@@ -69,6 +74,8 @@ export class ProducerService {
         winners.push(producer);
       }
     });
+    if(winners.length === 0){ return winners};
+
     return winners.sort((a, b) => a.name.localeCompare(b.name));
   }
 

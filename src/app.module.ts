@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { FileService } from './core/services/file.service';
 import { MovieModule } from './modules/movie/movie.module';
-import { InitializationService } from './core/services/inicializacao.service';
+import { InitializationService } from './core/services/initialization.service';
 import { ProducerModule } from './modules/producer/produtor/producer.module';
 
 @Module({
