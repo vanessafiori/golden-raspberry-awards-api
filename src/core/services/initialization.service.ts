@@ -2,7 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import * as path from 'path';
 import { FileService } from './file.service';
 import { MovieService } from './../../modules/movie/movie.service';
-import { ERROR_MESSAGES } from 'src/comun/constants/error.messages';
+import { ERROR_MESSAGES } from '../../common/constants/error.messages';
 
 @Injectable()
 export class InitializationService implements OnApplicationBootstrap {

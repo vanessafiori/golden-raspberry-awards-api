@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as csv from 'csv-parser';
 import * as fs from 'fs';
-import { ERROR_MESSAGES } from 'src/comun/constants/error.messages';
+import { ERROR_MESSAGES } from '../../common/constants/error.messages';
 
 @Injectable()
 export class FileService {
