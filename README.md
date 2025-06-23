@@ -35,6 +35,7 @@ API desenvolvida com [NestJS](https://nestjs.com/) para armazenar dados de filme
 $ git clone https://github.com/vanessafiori/golden-raspberry-awards-api.git
 $ cd golden-raspberry-awards-api
 $ pnpm install
+$ npx prisma generate
 ```
 
 
