@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProducerController } from './producer.controller';
 import { ProducerService } from './producer.service';
-import { MovieModule } from './../../../modules/movie/movie.module';
-import { PrismaModule } from './../../../core/prisma/prisma.module';
+import { MovieModule } from '../../movie/movie.module';
+import { PrismaModule } from '../../../core/prisma/prisma.module';
 
 describe('ProducerController', () => {
   let controller: ProducerController;
