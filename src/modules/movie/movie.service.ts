@@ -39,6 +39,9 @@ export class MovieService {
     return this.prisma.movie.findMany({
       where: {
         winner: true
+      },
+      orderBy: {
+        year: 'asc'
       }
     });
   }
