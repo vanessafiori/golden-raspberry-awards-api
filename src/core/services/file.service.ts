@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import * as csv from 'csv-parser';
 import * as fs from 'fs';
 import { ERROR_MESSAGES } from '../../common/constants/error.messages';
 
 @Injectable()
 export class FileService {
+
+  private readonly logger = new Logger(FileService.name);
 
   async convertCsvToJson(path: string ): Promise<any[]> {
     if (!fs.existsSync(path)) {
@@ -24,11 +27,11 @@ export class FileService {
         .on('end', () => {
           resolve(resultados);
         })
-        .on('error', (err) => {
-          console.error(ERROR_MESSAGES.FILE.CSV_READ_ERROR, err);
+        .on('error', (error) => {
+          this.logger.error(ERROR_MESSAGES.FILE.CSV_READ_ERROR, error.stack);
           
           reject(
-            new Error(ERROR_MESSAGES.FILE.CSV_READ_ERROR + err.message),
+            new Error(ERROR_MESSAGES.FILE.CSV_READ_ERROR + error.message),
           );
         });
     });

@@ -2,14 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProducerController } from './producer.controller';
 import { ProducerService } from './producer.service';
 import { MovieModule } from '../../movie/movie.module';
-import { PrismaModule } from '../../../core/prisma/prisma.module';
 
 describe('ProducerController', () => {
   let controller: ProducerController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [MovieModule, PrismaModule],
+      imports: [MovieModule],
       controllers: [ProducerController],
       providers: [ProducerService],
     }).compile();

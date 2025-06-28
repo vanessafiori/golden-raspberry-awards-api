@@ -1,49 +1,72 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from './../../core/prisma/prisma.service';
-import { MovieDto } from '../movie/dto/movie.dto';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Logger } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { MovieDto } from './dto/movie.dto';
+import { Movie } from './entity/movie.entity';
+import { ERROR_MESSAGES } from '../../common/constants/error.messages';
 
 @Injectable()
 export class MovieService {
 
+  private readonly logger = new Logger(MovieService.name);
+
   constructor(
-    private prisma: PrismaService
-  ){ }
+    @InjectRepository(Movie)
+    private movieRepo: Repository<Movie>,
+  ) {}
 
-  async create(filmes: any){
+  async create(movies: any[]): Promise<void> {
     try {
-      const creates = filmes.map(filme =>
-        this.prisma.movie.upsert({
-          where: { title: filme.title },
-          update: {},
-          create: {
-            year: parseInt(filme.year),
-            title: filme.title,
-            studio: filme.studios,
-            producer: filme.producers,
-            winner: filme.winner?.toLowerCase() === 'yes' ? true : false
-          },
-        })
-      )
-      await this.prisma.$transaction(creates);
+      for (const movie of movies) {
+        const title = movie.title;
 
+        const existing = await this.movieRepo.findOne({ where: { title } });
+
+        if (!existing) {
+          const newMovie = this.movieRepo.create({
+            year: parseInt(movie.year),
+            title: movie.title,
+            studio: movie.studios,
+            producer: movie.producers,
+            winner: movie.winner?.toLowerCase() === 'yes',
+          });
+
+          await this.movieRepo.save(newMovie);
+        }
+      }
     } catch (error) {
-      console.error('Erro ao salvar filmes:', error);
+      this.logger.error(ERROR_MESSAGES.MOVIE.SAVE_ERROR, error.stack);
       throw new HttpException(
-        'Ocorreu um erro ao salvar os filmes no banco de dados.',
+        ERROR_MESSAGES.MOVIE.SAVE_ERROR,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
   }
 
   async getWinningMovies(): Promise<MovieDto[]> {
-    return this.prisma.movie.findMany({
-      where: {
-        winner: true
-      },
-      orderBy: {
-        year: 'asc'
-      }
-    });
+
+    try {
+      const movies = await this.movieRepo.find({
+        where: { winner: true },
+        order: { year: 'ASC' },
+      });
+
+      return movies.map(movie => ({
+        id: movie.id,
+        title: movie.title,
+        year: movie.year,
+        studio: movie.studio,
+        producer: movie.producer,
+        winner: movie.winner,
+      }));
+    } catch (error) {
+      this.logger.error(ERROR_MESSAGES.MOVIE.LIST_ERROR, error.stack);
+      throw new HttpException(
+        ERROR_MESSAGES.MOVIE.LIST_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
 }
