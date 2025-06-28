@@ -21,51 +21,44 @@ API desenvolvida com [NestJS](https://nestjs.com/) para armazenar dados de filme
 
 - [NestJS](https://nestjs.com/) - Framework principal
 - [TypeScript](https://www.typescriptlang.org/) - Linguagem
-- [Prisma](https://www.prisma.io/) - ORM
+- [TypeORM](https://typeorm.io/) - ORM
 - [SQLite](https://www.sqlite.org/) - Banco de dados
 - [Supertest](https://github.com/visionmedia/supertest) - Testes de integração
 
 
-## Setup do projeto
+## Pré-requisitos
 
 - Node.js v20+
-- pnpm
+- npm 10.8.1
 
 ```bash
 $ git clone https://github.com/vanessafiori/golden-raspberry-awards-api.git
 $ cd golden-raspberry-awards-api
-$ pnpm install
-$ npx prisma generate
+$ npm install
 ```
-
 
 ## Executando a aplicação
 
 ```bash
-# Desenvolvimento
-$ pnpm start:dev
-
-# Produção
-$ pnpm build
-$ pnpm start:prod
+$ npm run start:dev
 ```
-
-
-## Executando os testes
-
-```bash
-# e2e tests
-$ pnpm test:e2e
-```
-
 
 ## Rotas da API
 
-GET /producers/award-intervals
+GET http://localhost:3000/producers/award-intervals
 
 Retorna os produtores com menor e maior intervalo entre vitórias consecutivas a partir de um arquivo CSV que deverá estar presente em src/assets/ e conter os campos: year;title;studios;producers;winner.
 
-Exemplo de Resposta:
+
+- Exemplo de arquivo CSV:
+
+year;title;studios;producers;winner
+1980;Can't Stop the Music;Associated Film Distribution;Allan Carr;yes
+1980;Cruising;Lorimar Productions, United Artists;Jerry Weintraub;
+1980;The Formula;MGM, United Artists;Steve Shagan;
+
+- Exemplo de Resposta:
+
 { 
   "min": [ 
     { 
@@ -96,6 +89,14 @@ Exemplo de Resposta:
     } 
   ] 
 } 
+
+
+## Executando os testes
+
+```bash
+# e2e tests
+$ npm run test:e2e
+```
 
 
 ## Contato
